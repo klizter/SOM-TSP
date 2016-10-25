@@ -1,4 +1,4 @@
-from plot_elastic_ring import PlotElasticRing
+
 
 class TSPDataParser:
 
@@ -35,6 +35,3 @@ class TSPDataParser:
     @classmethod
     def normalize(cls, value, value_min, value_max):
         return (value - value_min) / (value_max - value_min)
-
-data_points_list = TSPDataParser.parse_to_list('western_sahara', True)
-PlotElasticRing.plot_elastic_ring(data_points_list, list())
