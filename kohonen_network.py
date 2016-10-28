@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 
 class KohonenNework:
@@ -29,16 +30,21 @@ class KohonenNework:
         return abs(np.linalg.norm(input_case - weight))
 
     def apply_weight_delta(self, input_case):
-        for weight_index in range(len(self.weights)):
-            updated_weight = self.weight_delta(self.weights[winner_neuron_index], input_case, neighborhood_function(weight_index))
-            self.weights[winner_neuron_index] = updated_weight.tolist()
+        weight_of_winner = self.weights[self.winner_neuron_index]
+        current_weight_index = 0
+        for current_weight in self.weights:
+            neighborhood_factor = self.neighborhood_function(current_weight)
+            updated_weight = self.weight_delta(weight_of_winner, input_case, neighborhood_factor)
+            self.weights[current_weight_index] = updated_weight.tolist()
+            current_weight_index += 1
 
     def weight_delta(self, weight, input_case, neighborhood_factor):
-        return np.array((weight)) + (self.learning_rate * neighborhood_factor * (np.array(input_case) - np.array(weight)))
+        return np.array((weight)) + \
+            (self.learning_rate * neighborhood_factor * \
+                (np.array(input_case) - np.array(weight)))
 
-    def neighboorhood_function(self, current_index):
-        distance_from_winner = self.euclidean_distance(self.weights[self.winner_neuron_index], self.weights[current_index])
-        if distance_from_winner < 1:
-            distance_from_winner = 1
-        return 1/(pow(distance_from_winner, 2))
+    def neighborhood_function(self, current_weight):
+        weight_of_winner = self.weights[self.winner_neuron_index]
+        distance_from_winner = self.euclidean_distance(weight_of_winner, current_weight)
+        return 1-distance_from_winner
 
