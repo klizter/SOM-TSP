@@ -39,7 +39,7 @@ class PlotElasticRing:
 
     def update_graph(self, neurons):
         if neurons:
-
+            
             # Cache class reference
             cls = self.__class__
 
