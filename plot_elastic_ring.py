@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from random import uniform
-import numpy as np
 
 
 class PlotElasticRing:
