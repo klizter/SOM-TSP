@@ -1,6 +1,7 @@
 import numpy as np
 from random import shuffle
 
+
 class KohonenNework:
 
     weights = []
@@ -26,8 +27,6 @@ class KohonenNework:
             if self.radius != 0:
                 self.radius -= self.radius_delta
 
-            print self.radius
-
             self.learning_rate -= self.learning_rate_delta
             shuffle(input_cases)
 
@@ -40,27 +39,15 @@ class KohonenNework:
 
     def update_weights(self, winner_index, input_case):
         weight_indices = [((winner_index + i) % len(self.weights)) for i in xrange(-self.radius, self.radius + 1)]
-        print weight_indices
         while len(weight_indices):
             current_index = weight_indices.pop()
-            self.apply_weight_delta(winner_index, current_index, input_case)
+            self.apply_weight_delta(current_index, input_case)
 
-    def apply_weight_delta(self, winner_index, current_index, input_case):
+    def apply_weight_delta(self, current_index, input_case):
         updated_weight = self.calculate_weight_delta(self.weights[current_index], input_case, 1.0)
         self.weights[current_index] = updated_weight.tolist()
 
     def calculate_weight_delta(self, current_weight, input_case, neighborhood_factor):
         return np.asarray(current_weight) + (self.learning_rate * neighborhood_factor * (np.array(input_case) - np.array(current_weight)))
 
-    # Smoothing kernel a.k.a neighborhood function
-    def calculate_neighborhood_factor(self, winner_index, current_index):
-        if winner_index == current_index:
-            return 1.0
-
-        distance = abs(np.linalg.norm(np.asarray(self.weights[current_index])-np.asarray(self.weights[winner_index])))
-
-        if distance < self.radius:
-            return distance
-
-        return 0.0
 
