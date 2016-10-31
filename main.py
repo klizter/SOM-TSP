@@ -1,4 +1,5 @@
 from plot_elastic_ring import PlotElasticRing
+from plot_decay_rates import PlotLearningRate, PlotRadiusRate
 from tsp_data_parser import TSPDataParser
 from kohonen_network import KohonenNetwork
 import threading
@@ -22,7 +23,11 @@ def main():
 
         cities_normalized = TSPDataParser.parse_to_list(data_sets[current_set], True)
         per = PlotElasticRing(cities_normalized)
+        plr = PlotLearningRate()
+        prr = PlotRadiusRate()
         while True:
             per.update_graph(list(KohonenNetwork.weights))
+            plr.update_graph(list(KohonenNetwork.learning_rate_epoch))
+            prr.update_graph(list(KohonenNetwork.radius_epoch))
 
 main()
