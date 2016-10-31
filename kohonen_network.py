@@ -5,6 +5,8 @@ from random import shuffle
 class KohonenNetwork:
 
     weights = []
+    learning_rate_epoch = []
+    radius_epoch = []
 
     def __init__(self, number_of_weights, learning_rate, epochs, learning_exp_decay=False, radius_exp_decay=False):
         self.weights = np.random.rand(number_of_weights, 2)
@@ -28,6 +30,8 @@ class KohonenNetwork:
 
     def start_training(self, input_cases):
 
+        cls = self.__class__
+
         for epoch in xrange(self.epochs):
 
             self.current_epoch = epoch
@@ -39,6 +43,8 @@ class KohonenNetwork:
 
             self.adjust_radius()
             self.adjust_learning_rate()
+            cls.learning_rate_epoch.append(float(self.current_learning_rate))
+            cls.radius_epoch.append(int(self.current_radius))
             shuffle(input_cases)
 
     def adjust_radius(self):
