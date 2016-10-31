@@ -17,7 +17,7 @@ class KohonenNework:
         self.radius = radius
 
     def start_training(self, input_cases):
-
+        
         for epoch in xrange(self.epochs):
             self.update_learning_rate()
             self.current_epoch = epoch
