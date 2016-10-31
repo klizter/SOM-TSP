@@ -7,7 +7,7 @@ import threading
 
 def start_kohonen_network():
     cities_normalized = TSPDataParser.parse_to_list('western_sahara', True)
-    kn = KohonenNework(len(cities_normalized), 0.5, 20)
+    kn = KohonenNework(len(cities_normalized), 0.5, 400)
     kn.start_training(cities_normalized)
 
 

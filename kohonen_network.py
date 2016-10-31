@@ -1,5 +1,5 @@
 import numpy as np
-
+from random import shuffle
 
 class KohonenNework:
 
@@ -8,10 +8,11 @@ class KohonenNework:
     def __init__(self, number_of_weights, learning_rate, epochs):
         self.weights = np.random.rand(number_of_weights, 2)
         self.learning_rate = learning_rate
+        self.learning_rate_delta = learning_rate / epochs
         self.epochs = epochs
         self.__class__.weights = self.weights
-        self.radius = 1.4142135623730951 / 16.0
-        self.radius_delta = self.radius / epochs
+        self.radius = 6
+        self.radius_delta = 1
 
     def start_training(self, input_cases):
 
@@ -22,7 +23,13 @@ class KohonenNework:
                 winner_index = output_signals.tolist().index(min(output_signals))
                 self.update_weights(winner_index, input_case)
 
-            self.radius -= self.radius_delta
+            if self.radius != 0:
+                self.radius -= self.radius_delta
+
+            print self.radius
+
+            self.learning_rate -= self.learning_rate_delta
+            shuffle(input_cases)
 
     def integrate_and_fire(self, input_case):
         output_signals = np.apply_along_axis(self.inverse_euclidean_distance, 1, self.weights, input_case)
@@ -32,22 +39,18 @@ class KohonenNework:
         return abs(np.linalg.norm(input_case - weight))
 
     def update_weights(self, winner_index, input_case):
-        for current_index in xrange(len(self.weights)):
-
-            if winner_index == current_index:
-                continue
-
+        weight_indices = [((winner_index + i) % len(self.weights)) for i in xrange(-self.radius, self.radius + 1)]
+        print weight_indices
+        while len(weight_indices):
+            current_index = weight_indices.pop()
             self.apply_weight_delta(winner_index, current_index, input_case)
 
-        self.apply_weight_delta(winner_index, winner_index, input_case)
-
     def apply_weight_delta(self, winner_index, current_index, input_case):
-        neighborhood_factor = self.calculate_neighborhood_factor(winner_index, current_index)
-        updated_weight = self.calculate_weight_delta(self.weights[current_index], input_case, neighborhood_factor)
+        updated_weight = self.calculate_weight_delta(self.weights[current_index], input_case, 1.0)
         self.weights[current_index] = updated_weight.tolist()
 
-    def calculate_weight_delta(self, weight, input_case, neighborhood_factor):
-        return np.array((weight)) + (self.learning_rate * neighborhood_factor * (np.array(input_case) - np.array(weight)))
+    def calculate_weight_delta(self, current_weight, input_case, neighborhood_factor):
+        return np.asarray(current_weight) + (self.learning_rate * neighborhood_factor * (np.array(input_case) - np.array(current_weight)))
 
     # Smoothing kernel a.k.a neighborhood function
     def calculate_neighborhood_factor(self, winner_index, current_index):
@@ -58,6 +61,6 @@ class KohonenNework:
 
         if distance < self.radius:
             return distance
-        else:
-            return 0.0
+
+        return 0.0
 
