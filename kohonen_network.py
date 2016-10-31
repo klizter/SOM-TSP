@@ -43,7 +43,7 @@ class KohonenNetwork:
 
     def adjust_radius(self):
         if self.radius_exp_decay:
-            self.current_radius = int(round(self.initial_radius * pow(0.60, self.current_epoch)))
+            self.current_radius = int(round(self.initial_radius * pow(0.75, self.current_epoch)))
         else:
             #TODO: Fix linear decay for radius
             self.current_radius -= 1

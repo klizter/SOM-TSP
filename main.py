@@ -6,7 +6,7 @@ import threading
 
 def start_kohonen_network(data_set):
     cities_normalized = TSPDataParser.parse_to_list(data_set, True)
-    kn = KohonenNetwork(len(cities_normalized), 0.5, 400, radius_exp_decay=True, learning_exp_decay=True)
+    kn = KohonenNetwork(len(cities_normalized), 0.65, 400, radius_exp_decay=True, learning_exp_decay=True)
     kn.start_training(cities_normalized)
 
 
