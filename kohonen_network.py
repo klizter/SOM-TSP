@@ -47,18 +47,7 @@ class KohonenNetwork:
             cls.radius_epoch.append(int(self.current_radius))
             shuffle(input_cases)
 
-    def adjust_radius(self):
-        if self.radius_exp_decay:
-            self.current_radius = int(round(self.initial_radius * pow(0.75, self.current_epoch)))
-        else:
-            #TODO: Fix linear decay for radius
-            self.current_radius -= 1
-
-    def adjust_learning_rate(self):
-        if self.learning_exp_decay:
-            self.current_learning_rate = self.initial_learning_rate * pow(0.9, self.current_epoch)
-        else:
-            self.current_learning_rate = self.initial_learning_rate - (self.current_epoch * (self.initial_learning_rate / float(self.epochs)))
+    """ Routines for firing Neural Network """
 
     def integrate_and_fire(self, input_case):
         output_signals = np.apply_along_axis(self.euclidean_distance, 1, self.weights, input_case)
@@ -66,6 +55,8 @@ class KohonenNetwork:
 
     def euclidean_distance(self, weight, input_case):
         return abs(np.linalg.norm(input_case - weight))
+
+    """ Routines for adjusting Neural Network Weights """
 
     def update_weights(self, winner_index, input_case):
         weight_indices = [((winner_index + i) % len(self.weights)) for i in xrange(-self.current_radius, self.current_radius + 1)]
@@ -79,5 +70,20 @@ class KohonenNetwork:
 
     def calculate_weight_delta(self, current_weight, input_case, neighborhood_factor):
         return np.asarray(current_weight) + (self.current_learning_rate * neighborhood_factor * (np.array(input_case) - np.array(current_weight)))
+
+    """ Routines for adjusting Decay Rates """
+
+    def adjust_radius(self):
+        if self.radius_exp_decay:
+            self.current_radius = int(round(self.initial_radius * pow(0.75, self.current_epoch)))
+        else:
+            #TODO: Fix linear decay for radius
+            self.current_radius -= 1
+
+    def adjust_learning_rate(self):
+        if self.learning_exp_decay:
+            self.current_learning_rate = self.initial_learning_rate * pow(0.9, self.current_epoch)
+        else:
+            self.current_learning_rate = self.initial_learning_rate - (self.current_epoch * (self.initial_learning_rate / float(self.epochs)))
 
 
