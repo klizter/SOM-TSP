@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.colors import colorConverter
 from random import uniform
 
 
@@ -8,6 +9,7 @@ class PlotElasticRing:
     city_marker = '*'
     city_color = '#f2b32a'
     elastic_ring_node_color = '#30ac4f'
+    elastic_ring_node_alpha = 0.75
     elastic_ring_line_color = '#000000'
 
     def __init__(self, cities):
@@ -61,7 +63,8 @@ class PlotElasticRing:
             self.neuron_scatter.remove()
             marker_area = [100 for _ in range(len(neurons))]
             self.neuron_scatter = plt.scatter(neurons_x, neurons_y, s=marker_area, marker='H',
-                                              color=cls.elastic_ring_node_color, zorder=3)
+                                              color=colorConverter.to_rgba(cls.elastic_ring_node_color,
+                                                                          alpha=cls.elastic_ring_node_alpha), zorder=3)
 
             plt.draw()
 
