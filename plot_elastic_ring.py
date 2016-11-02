@@ -13,7 +13,7 @@ class PlotElasticRing:
     elastic_ring_line_color = '#000000'
 
     def __init__(self, cities):
-        plt.figure(1, figsize=(30, 20))
+        plt.figure(1, figsize=(12, 12))
         # Cache class reference
         cls = self.__class__
 
