@@ -31,7 +31,17 @@ class KohonenNetwork:
         self.radius_delta = 1
         self.radius_exp_decay = radius_exp_decay
 
+    def init_report(self):
+        print '-------------------------------------------------'
+        print 'Initial training values'
+        print '-------------------------------------------------'
+        print 'Radius:\t\t %i' % self.initial_radius
+        print 'Learning Rate:\t %f' % self.initial_learning_rate
+        print 'Epochs:\t\t %i' % self.epochs
+
     def start_training(self, input_cases):
+
+        self.init_report()
 
         cls = self.__class__
 
