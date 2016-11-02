@@ -40,8 +40,8 @@ class PlotRadiusRate:
         plt.xlabel("Epoch")
 
         axes = plt.gca()
-        axes.set_xlim([0, 20])
-        axes.set_ylim([0.0, 20])
+        axes.set_xlim([0, 50])
+        axes.set_ylim([0, 150])
 
     def update_graph(self, radius_rate_epoch):
         plt.figure(2)
