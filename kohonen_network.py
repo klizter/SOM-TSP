@@ -1,5 +1,7 @@
 import numpy as np
 from random import shuffle
+from threading import Event
+from thread_sync import ThreadSync
 
 
 class KohonenNetwork:
@@ -44,6 +46,9 @@ class KohonenNetwork:
 
             if (epoch % self.k) == 0:
                 print "Current path cost: %f" % self.estimate_current_path(input_cases)
+                ThreadSync.set()
+                ThreadSync.clear()
+
 
             self.adjust_radius()
             self.adjust_learning_rate()

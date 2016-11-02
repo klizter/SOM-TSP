@@ -3,6 +3,7 @@ from plot_decay_rates import PlotLearningRate, PlotRadiusRate
 from tsp_data_parser import TSPDataParser
 from kohonen_network import KohonenNetwork
 import threading
+from thread_sync import ThreadSync
 
 
 def start_kohonen_network(data_set):
@@ -29,5 +30,7 @@ def main():
             per.update_graph(list(KohonenNetwork.weights))
             plr.update_graph(list(KohonenNetwork.learning_rate_epoch))
             prr.update_graph(list(KohonenNetwork.radius_epoch))
+            ThreadSync().wait()
+
 
 main()
