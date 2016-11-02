@@ -26,7 +26,7 @@ class KohonenNetwork:
         self.learning_exp_decay = learning_exp_decay
 
         # Radius
-        self.initial_radius = 7
+        self.initial_radius = int(round(float(number_of_weights) / 10))
         self.current_radius = self.initial_radius
         self.radius_delta = 1
         self.radius_exp_decay = radius_exp_decay
