@@ -6,19 +6,20 @@ import threading
 from thread_sync import ThreadSync
 
 
-def start_kohonen_network(data_set):
+def start_kohonen_network(data_set, k):
     cities_normalized = TSPDataParser.parse_to_list(data_set, True)
-    kn = KohonenNetwork(int(len(cities_normalized) * 1.5), 0.65, 60, 5, radius_exp_decay=True, learning_exp_decay=True)
+    kn = KohonenNetwork(int(len(cities_normalized) * 1.33), 0.65, 60, k, radius_scheme='exp_decay', learning_rate_scheme='exp_decay')
     kn.start_training(cities_normalized)
 
 
 def main():
 
     data_sets = {1: 'western_sahara', 2: 'djibouti', 3: 'qatar', 4: 'uruguay'}
-    current_set = 3
+    current_set = 1
+    k = 10
 
     if __name__ == '__main__':
-        thread = threading.Thread(target=start_kohonen_network, args=(data_sets[current_set],), name="KohonenNetworkThread")
+        thread = threading.Thread(target=start_kohonen_network, args=(data_sets[current_set], k,), name="KohonenNetworkThread")
         thread.daemon = True
         thread.start()
 

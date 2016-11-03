@@ -1,6 +1,4 @@
 import numpy as np
-from random import shuffle
-from threading import Event
 from thread_sync import ThreadSync
 
 
@@ -10,7 +8,7 @@ class KohonenNetwork:
     learning_rate_epoch = []
     radius_epoch = []
 
-    def __init__(self, number_of_weights, learning_rate, epochs, k, learning_exp_decay=False, radius_exp_decay=False):
+    def __init__(self, number_of_weights, learning_rate, epochs, k, learning_rate_scheme='static', radius_scheme='static'):
         self.weights = np.random.rand(number_of_weights, 2)
         self.__class__.weights = self.weights
         self.k = k
@@ -23,13 +21,13 @@ class KohonenNetwork:
         self.initial_learning_rate = learning_rate
         self.current_learning_rate = self.initial_learning_rate
         self.learning_rate_delta = learning_rate / epochs
-        self.learning_exp_decay = learning_exp_decay
+        self.learning_rate_scheme = learning_rate_scheme
 
         # Radius
         self.initial_radius = int(round(float(number_of_weights) / 10))
         self.current_radius = self.initial_radius
         self.radius_delta = 1
-        self.radius_exp_decay = radius_exp_decay
+        self.radius_scheme = radius_scheme
 
     def init_report(self):
         print '-------------------------------------------------'
@@ -91,17 +89,18 @@ class KohonenNetwork:
 
     """ Routines for adjusting Decay Rates """
 
+    # TODO Add static and linear decay rate
     def adjust_radius(self):
-        if self.radius_exp_decay:
+        if self.radius_scheme == 'exp_decay':
             self.current_radius = int(round(self.initial_radius * pow(0.9, self.current_epoch)))
-        else:
-            #TODO: Fix linear decay for radius
+        elif self.radius_scheme == 'lin_decay' and self.current_radius != 0:
             self.current_radius -= 1
 
+    # TODO: Add static learning rate
     def adjust_learning_rate(self):
-        if self.learning_exp_decay:
+        if self.learning_rate_scheme == 'exp_decay':
             self.current_learning_rate = self.initial_learning_rate * pow(0.95, self.current_epoch)
-        else:
+        elif self.learning_rate_scheme == 'lin_decay':
             self.current_learning_rate = self.initial_learning_rate - (self.current_epoch * (self.initial_learning_rate / float(self.epochs)))
 
     """ Routine for calculating current TSP path """
@@ -134,13 +133,3 @@ class KohonenNetwork:
         for i in xrange(len(input_cases)):
             path_cost += abs(self.euclidean_distance(city_path[i-1], city_path[i]))
         return path_cost
-
-
-
-
-
-
-
-
-
-
