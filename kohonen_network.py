@@ -1,16 +1,18 @@
 import numpy as np
 from thread_sync import ThreadSync
+import time
 
 
 class KohonenNetwork:
 
     weights = []
-    learning_rate_epoch = []
-    radius_epoch = []
+    learning_rate_epoch = [0]
+    radius_epoch = [0]
+    current_path_cost = float()
 
     def __init__(self, number_of_weights, learning_rate, epochs, k, learning_rate_scheme='static', radius_scheme='static'):
         self.weights = np.random.rand(number_of_weights, 2)
-        self.__class__.weights = self.weights
+        self.__class__.weights = np.copy(self.weights)
         self.k = k
 
         # Learning Iterations
@@ -40,12 +42,20 @@ class KohonenNetwork:
     def start_training(self, input_cases):
 
         self.init_report()
-
         cls = self.__class__
+        cls.current_path_cost = self.estimate_current_path(input_cases)
+        print "Current path cost: %f" % cls.current_path_cost
+
+        ThreadSync.set()
+        ThreadSync.clear()
+        time.sleep(5)
 
         for epoch in xrange(1, self.epochs + 1):
 
             self.current_epoch = epoch
+
+            cls.learning_rate_epoch.append(float(self.current_learning_rate))
+            cls.radius_epoch.append(int(self.current_radius))
 
             for input_case in input_cases:
                 output_signals = self.integrate_and_fire(input_case)
@@ -53,15 +63,17 @@ class KohonenNetwork:
                 self.update_weights(winner_index, input_case)
 
             if (epoch % self.k) == 0:
-                print "Current path cost: %f" % self.estimate_current_path(input_cases)
+                cls.current_path_cost = self.estimate_current_path(input_cases)
+                cls.weights = np.copy(self.weights)
+                print "Current path cost: %f" % cls.current_path_cost
                 ThreadSync.set()
                 ThreadSync.clear()
-
+                time.sleep(5)
 
             self.adjust_radius()
             self.adjust_learning_rate()
-            cls.learning_rate_epoch.append(float(self.current_learning_rate))
-            cls.radius_epoch.append(int(self.current_radius))
+
+        ThreadSync.set()
 
     """ Routines for firing Neural Network """
 
@@ -93,7 +105,7 @@ class KohonenNetwork:
     def adjust_radius(self):
         if self.radius_scheme == 'exp_decay':
             self.current_radius = int(round(self.initial_radius * pow(0.9, self.current_epoch)))
-        elif self.radius_scheme == 'lin_decay' and self.current_radius != 0:
+        elif self.radius_scheme == 'lin_decay' and self.current_epoch % self.k == 4 and self.current_radius != 0:
             self.current_radius -= 1
 
     # TODO: Add static learning rate

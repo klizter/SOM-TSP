@@ -5,7 +5,7 @@ from random import uniform
 
 class PlotElasticRing:
 
-    draw_tick = 0.5  # Seconds
+    draw_tick = 2  # Seconds
     city_marker = '*'
     city_color = '#f2b32a'
     elastic_ring_node_color = '#30ac4f'
@@ -13,21 +13,23 @@ class PlotElasticRing:
     elastic_ring_line_color = '#000000'
 
     def __init__(self, cities):
-        plt.figure(1, figsize=(12, 12))
+        figure = plt.figure(1, figsize=(24, 12))
+        self.first_plot = figure.add_subplot(1,2,1)
         # Cache class reference
         cls = self.__class__
+
 
         # Add cities to scatter
         cities_x = [city[0] for city in cities]
         cities_y = [city[1] for city in cities]
         marker_area = [100 for _ in range(len(cities))]
-        self.city_scatter = plt.scatter(cities_x, cities_y, s=marker_area, marker=cls.city_marker, c=cls.city_color)
+        self.city_scatter = self.first_plot.scatter(cities_x, cities_y, s=marker_area, marker=cls.city_marker, c=cls.city_color)
 
         # Prepare neuron elastic circle
-        self.elastic_ring_plot = plt.plot([], c=cls.elastic_ring_line_color, linewidth=2.0)
+        self.elastic_ring_plot = self.first_plot.plot([], c=cls.elastic_ring_line_color, linewidth=2.0)
 
         # Prepare neuron scatter
-        self.neuron_scatter = plt.scatter([], [], s=marker_area)
+        self.neuron_scatter = self.first_plot.scatter([], [], s=marker_area)
 
         # Set x and y axis limit
         axes = plt.gca()
@@ -39,6 +41,7 @@ class PlotElasticRing:
         plt.show()
 
     def update_graph(self, neurons):
+
         if neurons:
 
             plt.figure(1)
@@ -63,11 +66,9 @@ class PlotElasticRing:
 
             self.neuron_scatter.remove()
             marker_area = [100 for _ in range(len(neurons))]
-            self.neuron_scatter = plt.scatter(neurons_x, neurons_y, s=marker_area, marker='H',
-                                              color=colorConverter.to_rgba(cls.elastic_ring_node_color,
-                                                                          alpha=cls.elastic_ring_node_alpha), zorder=3)
-
-            plt.draw()
+            self.neuron_scatter = self.first_plot.scatter(neurons_x, neurons_y, s=marker_area, marker='H',
+                                                          color=colorConverter.to_rgba(cls.elastic_ring_node_color,
+                                                                                       alpha=cls.elastic_ring_node_alpha), zorder=3)
 
     @classmethod
     def plot_elastic_ring(cls, cities, neurons):

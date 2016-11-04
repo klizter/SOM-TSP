@@ -16,3 +16,7 @@ class ThreadSync:
     @classmethod
     def clear(cls):
         cls.e.clear()
+
+    @classmethod
+    def is_set(cls):
+        return cls.e.is_set()
