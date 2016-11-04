@@ -16,19 +16,19 @@ def start_kohonen_network(cities_normalized, k, epochs, number_of_neurons, initi
 def main():
 
     data_sets = {1: 'western_sahara', 2: 'djibouti', 3: 'qatar', 4: 'uruguay'}
-
-    current_set = 2
-    k = 5
-    epochs = 50
-    cities_normalized = TSPDataParser.parse_to_list(data_sets[current_set], True)
-    number_of_neurons = int(len(cities_normalized) * 2)
-    initial_learning_rate = 0.65
-    decay_scheme = 'exp_decay'
     print("1: western_sahara (x-Small)")
     print("2: djibouti (Small)")
     print("3: qatar (Medium)")
     print("4: uruguay (Large)")
     current_set = int(raw_input("Which map?"))
+
+    k = 5
+    epochs = 50
+    cities_normalized = TSPDataParser.parse_to_list(data_sets[current_set], True)
+    number_of_neurons = int(len(cities_normalized) * 2)
+    initial_learning_rate = 0.65
+    decay_scheme = 'lin_decay'
+
 
     if __name__ == '__main__':
         thread = threading.Thread(target=start_kohonen_network, args=(cities_normalized, k, epochs, number_of_neurons,
