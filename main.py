@@ -15,7 +15,11 @@ def start_kohonen_network(data_set):
 def main():
 
     data_sets = {1: 'western_sahara', 2: 'djibouti', 3: 'qatar', 4: 'uruguay'}
-    current_set = 3
+    print("1: western_sahara (x-Small)")
+    print("2: djibouti (Small)")
+    print("3: qatar (Medium)")
+    print("4: uruguay (Large)")
+    current_set = int(raw_input("Which map?"))
 
     if __name__ == '__main__':
         thread = threading.Thread(target=start_kohonen_network, args=(data_sets[current_set],), name="KohonenNetworkThread")
