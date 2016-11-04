@@ -105,8 +105,8 @@ class KohonenNetwork:
     def adjust_radius(self):
         if self.radius_scheme == 'exp_decay':
             self.current_radius = int(round(self.initial_radius * pow(0.9, self.current_epoch)))
-        elif self.radius_scheme == 'lin_decay' and self.current_epoch % self.k == 4 and self.current_radius != 0:
-            self.current_radius -= 1
+        elif self.radius_scheme == 'lin_decay' and self.current_radius != 0:
+            self.current_radius = self.initial_radius - int(self.current_epoch * ((self.initial_radius * 1.33) / float(self.epochs)))
 
     # TODO: Add static learning rate
     def adjust_learning_rate(self):
