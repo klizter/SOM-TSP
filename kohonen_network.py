@@ -10,10 +10,11 @@ class KohonenNetwork:
     radius_epoch = [0]
     current_path_cost = float()
 
-    def __init__(self, number_of_weights, learning_rate, epochs, k, learning_rate_scheme='static', radius_scheme='static'):
+    def __init__(self, number_of_weights, learning_rate, epochs, k, cities, learning_rate_scheme='static', radius_scheme='static'):
         self.weights = np.random.rand(number_of_weights, 2)
         self.__class__.weights = np.copy(self.weights)
         self.k = k
+        self.cities = cities
 
         # Learning Iterations
         self.epochs = epochs
@@ -143,5 +144,5 @@ class KohonenNetwork:
     def calculate_city_path_cost(self, city_path, input_cases):
         path_cost = float()
         for i in xrange(len(input_cases)):
-            path_cost += abs(self.euclidean_distance(city_path[i-1], city_path[i]))
+            path_cost += abs(self.euclidean_distance(np.asarray(self.cities[city_path[i-1]]), self.cities[city_path[i]]))
         return path_cost

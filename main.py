@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 import os
 
 
-def start_kohonen_network(cities_normalized, k, epochs, number_of_neurons, initial_learning_rate, decay_scheme):
-    kn = KohonenNetwork(number_of_neurons, initial_learning_rate, epochs, k,
+def start_kohonen_network(cities_normalized, k, epochs, number_of_neurons, initial_learning_rate, decay_scheme, cities):
+    kn = KohonenNetwork(number_of_neurons, initial_learning_rate, epochs, k, cities,
                         radius_scheme=decay_scheme, learning_rate_scheme=decay_scheme)
     kn.start_training(cities_normalized)
 
@@ -24,6 +24,7 @@ def main():
 
     k = 5
     epochs = 50
+    cities = TSPDataParser.parse_to_list(data_sets[current_set])
     cities_normalized = TSPDataParser.parse_to_list(data_sets[current_set], True)
     number_of_neurons = int(len(cities_normalized) * 2)
     initial_learning_rate = 0.65
@@ -32,7 +33,7 @@ def main():
 
     if __name__ == '__main__':
         thread = threading.Thread(target=start_kohonen_network, args=(cities_normalized, k, epochs, number_of_neurons,
-                                                                      initial_learning_rate, decay_scheme,), name="KohonenNetworkThread")
+                                                                      initial_learning_rate, decay_scheme, cities), name="KohonenNetworkThread")
         thread.daemon = True
         thread.start()
 
